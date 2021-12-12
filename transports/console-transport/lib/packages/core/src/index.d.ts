@@ -1,6 +1,5 @@
-export * from "./Notificator";
-export * from "./transport/Transport.type";
-m "./transport/Transport.type";
+import { INotificator } from "./index.types";
+import { IEmailTransport } from "./transport/Transport.type";
 export default class Notificator implements INotificator {
     private readonly transportStore;
     constructor();

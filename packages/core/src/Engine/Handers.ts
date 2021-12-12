@@ -2,7 +2,9 @@ import {
   IEmailTransport,
   ISendMessageSuccessResponse,
   ITransports,
+  ISMSTransport,
   IEmailOptions,
+  ISmsOptions,
 } from "../transport/Transport.type";
 import { ChannelTypes } from "../enums";
 import { ITriggerPayload } from "../template/template.types";
@@ -38,13 +40,18 @@ export class EmailHandler implements Handler {
 
 export class SMSHandler implements Handler {
   constructor() {}
-  sendMessage(
+  async sendMessage(
     transport: ITransports,
     message: IMessage,
     payload: ITriggerPayload
   ): Promise<ISendMessageSuccessResponse> {
-    console.log(transport, message, payload);
-    throw new Error("Method not implemented.");
+    const smsTransport: ISMSTransport = transport as ISMSTransport;
+    const smsOptions: ISmsOptions = {
+      content: message.body,
+      to: payload.phone as string,
+    };
+    const response = await smsTransport.sendMessage(smsOptions);
+    return response;
   }
 }
 

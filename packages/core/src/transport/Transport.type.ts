@@ -32,10 +32,22 @@ export interface ISendMessageSuccessResponse {
   transportId: string;
 }
 
-export type ITransports = IEmailTransport;
+export type ITransports = IEmailTransport | ISMSTransport;
 
 export interface IEmailTransport extends ITransport {
   channel: ChannelTypes.EMAIL;
 
   sendMessage(options: IEmailOptions): Promise<ISendMessageSuccessResponse>;
+}
+
+export interface ISmsOptions {
+  to: string;
+  content: string;
+  from?: string;
+}
+
+export interface ISMSTransport extends ITransport {
+  sendMessage(options: ISmsOptions): Promise<ISendMessageSuccessResponse>;
+
+  channelType: ChannelTypes.SMS;
 }

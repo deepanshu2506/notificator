@@ -116,8 +116,23 @@ var SMSHandler = /** @class */ (function () {
     function SMSHandler() {
     }
     SMSHandler.prototype.sendMessage = function (transport, message, payload) {
-        console.log(transport, message, payload);
-        throw new Error("Method not implemented.");
+        return __awaiter(this, void 0, void 0, function () {
+            var smsTransport, smsOptions, response;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        smsTransport = transport;
+                        smsOptions = {
+                            content: message.body,
+                            to: payload.phone,
+                        };
+                        return [4 /*yield*/, smsTransport.sendMessage(smsOptions)];
+                    case 1:
+                        response = _a.sent();
+                        return [2 /*return*/, response];
+                }
+            });
+        });
     };
     return SMSHandler;
 }());
