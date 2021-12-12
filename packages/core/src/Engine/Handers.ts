@@ -7,7 +7,12 @@ import {
   ISmsOptions,
 } from "../transport/Transport.type";
 import { ChannelTypes } from "../enums";
-import { ITemplate, ITriggerPayload } from "../template/template.types";
+import {
+  IEmailTemplate,
+  ISMSTemplate,
+  ITemplate,
+  ITriggerPayload,
+} from "../template/template.types";
 import { IanyProps } from "../index.types";
 import { evaluateTemplate } from "../template/TemplateProcessor";
 
@@ -28,15 +33,16 @@ export class EmailHandler implements Handler {
     templatePayload: IanyProps,
     payload: ITriggerPayload
   ): Promise<ISendMessageSuccessResponse> {
+    const emailTemplate: IEmailTemplate = template as IEmailTemplate;
     const messageContent: string = evaluateTemplate(
       template.template,
       templatePayload
     );
     let messageSubject = "";
-    if (typeof template.subject === "string") {
-      messageSubject = template.subject;
+    if (typeof emailTemplate.subject === "string") {
+      messageSubject = emailTemplate.subject;
     } else {
-      messageSubject = template.subject(payload.subjectVars);
+      messageSubject = emailTemplate.subject(payload.subjectVars);
     }
     const emailTransport: IEmailTransport = transport as IEmailTransport;
     const emailOptions: IEmailOptions = {
@@ -58,8 +64,9 @@ export class SMSHandler implements Handler {
     payload: ITriggerPayload
   ): Promise<ISendMessageSuccessResponse> {
     const smsTransport: ISMSTransport = transport as ISMSTransport;
+    const smsTemplate: ISMSTemplate = template as ISMSTemplate;
     const messageContent: string = evaluateTemplate(
-      template.template,
+      smsTemplate.template,
       templatePayload
     );
     const smsOptions: ISmsOptions = {
