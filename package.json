@@ -19,7 +19,6 @@
   "dependencies": {},
   "workspaces": [
     "packages/**",
-    "transports/*",
-    "examples/*"
+    "transports/*"
   ]
 }
