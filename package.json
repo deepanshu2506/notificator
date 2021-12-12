@@ -1,0 +1,25 @@
+{
+  "name": "@notificator/motificator",
+  "version": "1.0.0",
+  "description": "One stop shop for all notification needs",
+  "main": "lib/index.js",
+  "module": "lib/index.esm.js",
+  "private": true,
+  "scripts": {
+    "build": "lerna run build --stream",
+    "start": "lerna run start --stream"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "rollup": "^2.61.0",
+    "rollup-plugin-typescript2": "^0.31.1",
+    "typescript": "^4.5.3"
+  },
+  "dependencies": {},
+  "workspaces": [
+    "packages/**",
+    "transports/*",
+    "examples/*"
+  ]
+}
