@@ -5,10 +5,13 @@ import {
   ISMSTransport,
   IEmailOptions,
   ISmsOptions,
+  IPushNotificationTransport,
+  IPushNotificationOptions,
 } from "../transport/Transport.type";
 import { ChannelTypes } from "../enums";
 import {
   IEmailTemplate,
+  IPushNotification,
   ISMSTemplate,
   ITemplate,
   ITriggerPayload,
@@ -78,11 +81,50 @@ export class SMSHandler implements Handler {
   }
 }
 
+export class PushNotificationHandler implements Handler {
+  async sendMessage(
+    transport: ITransports,
+    template: ITemplate,
+    templatePayload: IanyProps,
+    payload: ITriggerPayload
+  ): Promise<ISendMessageSuccessResponse> {
+    const pushNotificationTemplate: IPushNotification =
+      template as IPushNotification;
+    const pushNotificationTransport: IPushNotificationTransport =
+      transport as IPushNotificationTransport;
+
+    const messageContent: string = evaluateTemplate(
+      template.template,
+      templatePayload
+    );
+
+    const pushNotificationOptions: IPushNotificationOptions = {
+      deviceID: payload.deviceID as string,
+      content: messageContent,
+      image: pushNotificationTemplate.image,
+      title:
+        typeof pushNotificationTemplate.title === "string"
+          ? pushNotificationTemplate.title
+          : pushNotificationTemplate.title(payload.subjectVars),
+    };
+
+    if (pushNotificationTemplate.subTitle) {
+      pushNotificationOptions.subtitle =
+        typeof pushNotificationTemplate.title === "string"
+          ? pushNotificationTemplate.title
+          : pushNotificationTemplate.title(payload.subTitleVars);
+    }
+    return await pushNotificationTransport.sendMessage(pushNotificationOptions);
+  }
+}
+
 export function HandlerFactory(handlerType: ChannelTypes): Handler {
   switch (handlerType) {
     case ChannelTypes.EMAIL:
       return new EmailHandler();
     case ChannelTypes.SMS:
       return new SMSHandler();
+    case ChannelTypes.PUSH:
+      return new PushNotificationHandler();
   }
 }

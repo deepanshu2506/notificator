@@ -74,6 +74,14 @@ export class MessageEngine {
       case ChannelTypes.EMAIL:
         if (!(payload.email && validator.isEmail(payload.email)))
           throw new Error("valid Email is required in the payload");
+      case ChannelTypes.PUSH:
+        if (!payload.deviceID) {
+          throw new Error("DeviceID is required in the payload");
+        }
+      case ChannelTypes.SMS:
+        if (!payload.phone) {
+          throw new Error("phone is required in the payload");
+        }
       default:
         return;
     }

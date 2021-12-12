@@ -17,8 +17,8 @@ export interface ISMSTemplate extends ITemplate {
 
 export interface IPushNotification extends ITemplate {
   title: string | ((props?: IanyProps) => string);
-  subTitle: string | ((props?: IanyProps) => string);
-  image: string;
+  subTitle?: string | ((props?: IanyProps) => string);
+  image?: string;
 }
 
 export interface IEvent {
@@ -30,8 +30,10 @@ export interface ITriggerPayload {
   email?: string;
   phone?: string;
   userID?: string;
+  deviceID?: string;
   templateVars?: IDictionary<any>;
   subjectVars?: IanyProps;
+  subTitleVars?: IanyProps;
 }
 
 interface IDictionary<TValue> {

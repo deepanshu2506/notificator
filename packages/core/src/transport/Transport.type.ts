@@ -32,7 +32,10 @@ export interface ISendMessageSuccessResponse {
   transportId: string;
 }
 
-export type ITransports = IEmailTransport | ISMSTransport;
+export type ITransports =
+  | IEmailTransport
+  | ISMSTransport
+  | IPushNotificationTransport;
 
 export interface IEmailTransport extends ITransport {
   channel: ChannelTypes.EMAIL;
@@ -48,6 +51,22 @@ export interface ISmsOptions {
 
 export interface ISMSTransport extends ITransport {
   sendMessage(options: ISmsOptions): Promise<ISendMessageSuccessResponse>;
+
+  channelType: ChannelTypes.SMS;
+}
+
+export interface IPushNotificationOptions {
+  deviceID: string;
+  title: string;
+  subtitle?: string;
+  content: string;
+  image?: string;
+}
+
+export interface IPushNotificationTransport {
+  sendMessage(
+    options: IPushNotificationOptions
+  ): Promise<ISendMessageSuccessResponse>;
 
   channelType: ChannelTypes.SMS;
 }
