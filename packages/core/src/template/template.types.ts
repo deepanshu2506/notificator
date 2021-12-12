@@ -2,10 +2,23 @@ import { ChannelTypes } from "..";
 import { IanyProps } from "../index.types";
 
 export interface ITemplate {
-  subject: string | ((props?: IanyProps) => string);
   channel: ChannelTypes;
   template: string;
   name: string;
+}
+
+export interface IEmailTemplate extends ITemplate {
+  subject: string | ((props?: IanyProps) => string);
+  channel: ChannelTypes.EMAIL;
+}
+export interface ISMSTemplate extends ITemplate {
+  channel: ChannelTypes.SMS;
+}
+
+export interface IPushNotification extends ITemplate {
+  title: string | ((props?: IanyProps) => string);
+  subTitle: string | ((props?: IanyProps) => string);
+  image: string;
 }
 
 export interface IEvent {

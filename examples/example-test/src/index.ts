@@ -15,6 +15,7 @@ notifier.registerTemplates({
       name: "hello-template",
       template,
     },
+    {},
   ],
 });
 
