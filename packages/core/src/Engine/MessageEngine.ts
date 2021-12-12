@@ -14,6 +14,7 @@ interface IMessageEngineOptions {
   transportStore: TransportStore;
 }
 import validator from "validator";
+import { IanyProps } from "../index.types";
 export class MessageEngine {
   private readonly templateStore: TemplateStore;
   private readonly transportStore: TransportStore;
@@ -40,18 +41,19 @@ export class MessageEngine {
     payload: ITriggerPayload
   ): Promise<Array<ISendMessageSuccessResponse | any>> {
     this.validatePayload(template, payload);
-    const templatePayload = this.getTemplateVarsFromPayload(template, payload);
-    const messageContent: string = evaluateTemplate(
-      template.template,
-      templatePayload
+    const templatePayload: IanyProps = this.getTemplateVarsFromPayload(
+      template,
+      payload
     );
+
     const transports: Array<ITransports> =
       this.transportStore.getTransportByChannelType(template.channel);
     const handler: Handler = HandlerFactory(template.channel);
     const results = transports.map(async (transport: ITransports) => {
       const response: ISendMessageSuccessResponse = await handler.sendMessage(
         transport,
-        { body: messageContent, subject: template.subject },
+        template,
+        templatePayload,
         payload
       );
       return response;

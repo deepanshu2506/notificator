@@ -7,30 +7,41 @@ import {
   ISmsOptions,
 } from "../transport/Transport.type";
 import { ChannelTypes } from "../enums";
-import { ITriggerPayload } from "../template/template.types";
+import { ITemplate, ITriggerPayload } from "../template/template.types";
+import { IanyProps } from "../index.types";
+import { evaluateTemplate } from "../template/TemplateProcessor";
 
 export interface Handler {
   sendMessage(
     transport: ITransports,
-    message: IMessage,
+    template: ITemplate,
+    templatePayload: IanyProps,
     payload: ITriggerPayload
   ): Promise<ISendMessageSuccessResponse>;
 }
-export interface IMessage {
-  body: string;
-  subject: string;
-}
+
 export class EmailHandler implements Handler {
   constructor() {}
   async sendMessage(
     transport: ITransports,
-    message: IMessage,
+    template: ITemplate,
+    templatePayload: IanyProps,
     payload: ITriggerPayload
   ): Promise<ISendMessageSuccessResponse> {
+    const messageContent: string = evaluateTemplate(
+      template.template,
+      templatePayload
+    );
+    let messageSubject = "";
+    if (typeof template.subject === "string") {
+      messageSubject = template.subject;
+    } else {
+      messageSubject = template.subject(payload.subjectVars);
+    }
     const emailTransport: IEmailTransport = transport as IEmailTransport;
     const emailOptions: IEmailOptions = {
-      html: message.body,
-      subject: message.subject,
+      html: messageContent,
+      subject: messageSubject,
       to: payload.email as string,
     };
     const response = await emailTransport.sendMessage(emailOptions);
@@ -42,12 +53,17 @@ export class SMSHandler implements Handler {
   constructor() {}
   async sendMessage(
     transport: ITransports,
-    message: IMessage,
+    template: ITemplate,
+    templatePayload: IanyProps,
     payload: ITriggerPayload
   ): Promise<ISendMessageSuccessResponse> {
     const smsTransport: ISMSTransport = transport as ISMSTransport;
+    const messageContent: string = evaluateTemplate(
+      template.template,
+      templatePayload
+    );
     const smsOptions: ISmsOptions = {
-      content: message.body,
+      content: messageContent,
       to: payload.phone as string,
     };
     const response = await smsTransport.sendMessage(smsOptions);

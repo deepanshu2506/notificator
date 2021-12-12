@@ -8,3 +8,7 @@ export interface INotificator {
 
   sendNotification(eventID: string, payload: ITriggerPayload): void;
 }
+
+export interface IanyProps {
+  [key: string]: any;
+}
