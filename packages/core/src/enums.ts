@@ -3,3 +3,8 @@ export enum ChannelTypes {
   SMS = "SMS",
   PUSH = "PUSH",
 }
+
+export enum ResponseStates {
+  SUCCESS = "SUCCESS",
+  FAILURE = "FAILURE",
+}

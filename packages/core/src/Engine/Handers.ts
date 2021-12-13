@@ -1,6 +1,7 @@
 import {
   IEmailTransport,
-  ISendMessageSuccessResponse,
+  ISendMessageResponse,
+  ISendMessageFailureResponse,
   ITransports,
   ISMSTransport,
   IEmailOptions,
@@ -18,6 +19,7 @@ import {
 } from "../template/template.types";
 import { IanyProps } from "../index.types";
 import { evaluateTemplate } from "../template/TemplateProcessor";
+import { ResponseStates } from "..";
 
 export interface Handler {
   sendMessage(
@@ -25,7 +27,7 @@ export interface Handler {
     template: ITemplate,
     templatePayload: IanyProps,
     payload: ITriggerPayload
-  ): Promise<ISendMessageSuccessResponse>;
+  ): Promise<ISendMessageResponse>;
 }
 
 export class EmailHandler implements Handler {
@@ -35,12 +37,23 @@ export class EmailHandler implements Handler {
     template: ITemplate,
     templatePayload: IanyProps,
     payload: ITriggerPayload
-  ): Promise<ISendMessageSuccessResponse> {
+  ): Promise<ISendMessageResponse> {
     const emailTemplate: IEmailTemplate = template as IEmailTemplate;
-    const messageContent: string = evaluateTemplate(
-      template.template,
-      templatePayload
-    );
+    let messageContent = "";
+    try {
+      messageContent = evaluateTemplate(
+        emailTemplate.template,
+        templatePayload
+      );
+    } catch (err) {
+      const error = err as Error;
+      const response: ISendMessageFailureResponse = {
+        status: ResponseStates.FAILURE,
+        reason: error.message,
+        channel: emailTemplate.channel,
+      };
+      return response;
+    }
     let messageSubject = "";
     if (typeof emailTemplate.subject === "string") {
       messageSubject = emailTemplate.subject;
@@ -65,13 +78,21 @@ export class SMSHandler implements Handler {
     template: ITemplate,
     templatePayload: IanyProps,
     payload: ITriggerPayload
-  ): Promise<ISendMessageSuccessResponse> {
+  ): Promise<ISendMessageResponse> {
     const smsTransport: ISMSTransport = transport as ISMSTransport;
     const smsTemplate: ISMSTemplate = template as ISMSTemplate;
-    const messageContent: string = evaluateTemplate(
-      smsTemplate.template,
-      templatePayload
-    );
+    let messageContent = "";
+    try {
+      messageContent = evaluateTemplate(smsTemplate.template, templatePayload);
+    } catch (err) {
+      const error = err as Error;
+      const response: ISendMessageFailureResponse = {
+        status: ResponseStates.FAILURE,
+        reason: error.message,
+        channel: smsTemplate.channel,
+      };
+      return response;
+    }
     const smsOptions: ISmsOptions = {
       content: messageContent,
       to: payload.phone as string,
@@ -87,17 +108,27 @@ export class PushNotificationHandler implements Handler {
     template: ITemplate,
     templatePayload: IanyProps,
     payload: ITriggerPayload
-  ): Promise<ISendMessageSuccessResponse> {
+  ): Promise<ISendMessageResponse> {
     const pushNotificationTemplate: IPushNotification =
       template as IPushNotification;
     const pushNotificationTransport: IPushNotificationTransport =
       transport as IPushNotificationTransport;
 
-    const messageContent: string = evaluateTemplate(
-      template.template,
-      templatePayload
-    );
-
+    let messageContent = "";
+    try {
+      messageContent = evaluateTemplate(
+        pushNotificationTemplate.template,
+        templatePayload
+      );
+    } catch (err) {
+      const error = err as Error;
+      const response: ISendMessageFailureResponse = {
+        status: ResponseStates.FAILURE,
+        reason: error.message,
+        channel: pushNotificationTemplate.channel,
+      };
+      return response;
+    }
     const pushNotificationOptions: IPushNotificationOptions = {
       deviceID: payload.deviceID as string,
       content: messageContent,

@@ -1,9 +1,11 @@
 import {
   IEmailOptions,
   IEmailTransport,
-  ISendMessageSuccessResponse,
+  ISendMessageResponse,
   ITransportOptions,
   ChannelTypes,
+  ResponseStates,
+  ISendMessageSuccessResponse,
 } from "@notificator/core";
 
 interface IConsoleTransportOptions extends ITransportOptions {}
@@ -14,16 +16,16 @@ export class ConsoleTransport implements IEmailTransport {
     this.id = options.id;
     this.channel = ChannelTypes.EMAIL as ChannelTypes.EMAIL;
   }
-  async sendMessage(
-    options: IEmailOptions
-  ): Promise<ISendMessageSuccessResponse> {
+  async sendMessage(options: IEmailOptions): Promise<ISendMessageResponse> {
     console.log(options, this);
-    return {
-      transportId: this.id,
-      transportName: this.name,
+    const response: ISendMessageSuccessResponse = {
       date: Date.now().toLocaleString(),
       channel: this.channel,
+      status: ResponseStates.SUCCESS,
+      transportName: this.name,
+      transportId: this.id,
     };
+    return response;
   }
   name: string;
   id: string;

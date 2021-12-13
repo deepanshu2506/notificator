@@ -2,10 +2,7 @@ import { MessageEngine } from "./Engine/MessageEngine";
 import { INotificator } from "./index.types";
 import { IEvent, ITriggerPayload } from "./template/template.types";
 import { TemplateStore } from "./template/templateStore";
-import {
-  ITransports,
-  ISendMessageSuccessResponse,
-} from "./transport/Transport.type";
+import { ITransports, ISendMessageResponse } from "./transport/Transport.type";
 import { TransportStore } from "./transport/TransportStore";
 
 export class Notificator implements INotificator {
@@ -18,9 +15,9 @@ export class Notificator implements INotificator {
   async sendNotification(
     eventID: string,
     payload: ITriggerPayload
-  ): Promise<Array<ISendMessageSuccessResponse | any>> {
+  ): Promise<Array<ISendMessageResponse>> {
     const messageEngine = this.getMessageEngine();
-    const responses: Array<ISendMessageSuccessResponse | any> =
+    const responses: Array<ISendMessageResponse> =
       await messageEngine.sendMessage(eventID, payload);
     return responses;
   }

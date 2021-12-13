@@ -1,3 +1,4 @@
+import { ResponseStates } from "..";
 import { ChannelTypes } from "../enums";
 
 export interface ITransport {
@@ -23,13 +24,22 @@ export interface ISmsOptions {
   from?: string;
 }
 
-export interface ISendMessageSuccessResponse {
-  id?: string;
+export interface ISendMessageSuccessResponse extends ISendMessageResponse {
+  status: ResponseStates.SUCCESS;
   date?: string;
-  channel?: ChannelTypes;
   event?: string;
-  transportName: string;
-  transportId: string;
+}
+
+export interface ISendMessageResponse {
+  status: ResponseStates;
+  channel: ChannelTypes;
+  transportName?: string;
+  transportId?: string;
+}
+
+export interface ISendMessageFailureResponse extends ISendMessageResponse {
+  reason: string;
+  status: ResponseStates.FAILURE;
 }
 
 export type ITransports =
@@ -40,7 +50,7 @@ export type ITransports =
 export interface IEmailTransport extends ITransport {
   channel: ChannelTypes.EMAIL;
 
-  sendMessage(options: IEmailOptions): Promise<ISendMessageSuccessResponse>;
+  sendMessage(options: IEmailOptions): Promise<ISendMessageResponse>;
 }
 
 export interface ISmsOptions {
@@ -50,7 +60,7 @@ export interface ISmsOptions {
 }
 
 export interface ISMSTransport extends ITransport {
-  sendMessage(options: ISmsOptions): Promise<ISendMessageSuccessResponse>;
+  sendMessage(options: ISmsOptions): Promise<ISendMessageResponse>;
 
   channelType: ChannelTypes.SMS;
 }
@@ -64,9 +74,7 @@ export interface IPushNotificationOptions {
 }
 
 export interface IPushNotificationTransport {
-  sendMessage(
-    options: IPushNotificationOptions
-  ): Promise<ISendMessageSuccessResponse>;
+  sendMessage(options: IPushNotificationOptions): Promise<ISendMessageResponse>;
 
   channelType: ChannelTypes.SMS;
 }
