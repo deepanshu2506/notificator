@@ -1,6 +1,6 @@
 {
   "name": "@notificator/sendgrid",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "> TODO: description",
   "author": "Deepanshu Vangani <vanganideepanshu@gmail.com>",
   "homepage": "",
@@ -21,7 +21,7 @@
     "build": "rollup -c"
   },
   "dependencies": {
-    "@notificator/core": "^1.0.3",
+    "@notificator/core": "^1.0.4",
     "@sendgrid/mail": "^7.6.0",
     "lodash": "^4.17.21"
   },

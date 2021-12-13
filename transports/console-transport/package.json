@@ -1,6 +1,6 @@
 {
   "name": "@notificator/console-transport",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "> TODO: description",
   "author": "Deepanshu Vangani <vanganideepanshu@gmail.com>",
   "homepage": "",
@@ -21,7 +21,7 @@
     "build": "rollup -c"
   },
   "dependencies": {
-    "@notificator/core": "^1.0.3",
+    "@notificator/core": "^1.0.4",
     "lodash": "^4.17.21"
   },
   "devDependencies": {
