@@ -4,7 +4,7 @@ import {
   ISendMessageFailureResponse,
 } from "../transport/Transport.type";
 import { Handler, HandlerFactory } from "./Handers";
-import { ChannelTypes } from "../enums";
+import { ChannelTypes, ResponseStates } from "../enums";
 import { ITemplate, ITriggerPayload } from "../template/template.types";
 import { TemplateStore } from "../template/templateStore";
 import { TransportStore } from "../transport/TransportStore";
@@ -15,7 +15,6 @@ interface IMessageEngineOptions {
 }
 import validator from "validator";
 import { IanyProps } from "../index.types";
-import { ResponseStates } from "..";
 export class MessageEngine {
   private readonly templateStore: TemplateStore;
   private readonly transportStore: TransportStore;

@@ -28,6 +28,7 @@ export interface ISendMessageSuccessResponse extends ISendMessageResponse {
   status: ResponseStates.SUCCESS;
   date?: string;
   event?: string;
+  id: string;
 }
 
 export interface ISendMessageResponse {

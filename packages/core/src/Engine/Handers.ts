@@ -9,7 +9,7 @@ import {
   IPushNotificationTransport,
   IPushNotificationOptions,
 } from "../transport/Transport.type";
-import { ChannelTypes } from "../enums";
+import { ChannelTypes, ResponseStates } from "../enums";
 import {
   IEmailTemplate,
   IPushNotification,
@@ -19,7 +19,6 @@ import {
 } from "../template/template.types";
 import { IanyProps } from "../index.types";
 import { evaluateTemplate } from "../template/TemplateProcessor";
-import { ResponseStates } from "..";
 
 export interface Handler {
   sendMessage(
